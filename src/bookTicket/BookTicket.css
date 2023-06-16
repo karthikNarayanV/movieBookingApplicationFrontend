@@ -1,0 +1,34 @@
+.card{
+    margin:0 !important;
+    width: 4rem;
+    height: auto;
+    
+    
+}
+
+.slot{
+    background-color: white;
+    border-radius: 10px;
+}
+
+
+.box-o .card{
+    background-color: white;
+    color:black;
+    
+}
+
+.box-c .card{
+    background-color: black;
+    color:white;
+}
+
+.outer-booking{
+    background-color: #f9EAD9;
+}
+
+.fa-arrows-h{
+   font-size: 500px;
+   margin:0;
+   padding:0;
+}

@@ -1,12 +1,14 @@
 import React,{useState} from 'react'
 import './Login.css'
 import { useNavigate } from 'react-router' 
-import {  useSnackbar } from 'notistack';
+
 import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import {  useSnackbar } from 'notistack'
+import { handleFetchResponse } from '../apiUtils';
 
 export default function Login(props) {
     const { enqueueSnackbar } = useSnackbar();
@@ -22,19 +24,20 @@ export default function Login(props) {
             method:'POST',
             body:JSON.stringify(loginCredential),
             headers:{'Content-type':'application/json'},
-        }).then((response)=>{
+        }).then(handleFetchResponse)
+        .then((response)=>{
             if(response.status===200){
                 response.json().then(json=>{
                     sessionStorage.setItem("token",json.token)
                     const roles=json.roles;
                     if(roles.includes('ROLE_ADMIN')){
                         enqueueSnackbar("Welcome Admin", {variant: 'success' });
-                        navigate('/admin-home')
+                        navigate('/admin-main/admin-home')
                     }
                     
                     else{
                         enqueueSnackbar("Welcome User", {variant: 'success' });
-                        navigate('/user-home')
+                        navigate('/user-main/user-home')
                     }
                     
                 })
@@ -47,7 +50,11 @@ export default function Login(props) {
                 
             
         },(error)=>{
-            console.log(error)
+            if(error.message==='Unauthorized'){
+                enqueueSnackbar("Session expired", {variant: 'error' });
+                navigate('/')
+            } 
+            else enqueueSnackbar(error, {variant: 'error' });
         })
 
         navigate('/')
@@ -62,20 +69,22 @@ export default function Login(props) {
         navigate("/register")
     }
     return(
-        <div className="outer">
+        <div data-testid="login-comp"  className="outer">
             <div>
             
-            <AppBar position="static">
+            <AppBar sx={{
+                boxShadow: 0
+            }} color="transparent" position="static">
                 <Toolbar className="d-flex justify-content-end">
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                     Movie Booking Application
                 </Typography>
-                    <Button onClick={handleRegister} color="inherit">Register</Button>
+                    <Button onClick={handleRegister}  data-testid="register-btn-comp" color="inherit">Register</Button>
                 </Toolbar>
             </AppBar>
             
         </div>
-            <div data-testid="login-comp" className="Auth-form-container">
+            <div  className="Auth-form-container">
                 <form className="Auth-form" aria-label="login-form" onSubmit={handleSubmit}>
                 <div className="Auth-form-content">
                     <h3 className="Auth-form-title">Sign In</h3>
@@ -103,14 +112,14 @@ export default function Login(props) {
                     </TextField>
                     </div>
                     <div className="d-grid gap-2 mt-3">
-                    <input type="submit" className="btn btn-primary" />
+                    <input type="submit" className="btn btn-dark" />
                     
                     
                     </div>
                     
-                    <div className="d-flex justify-content-start mt-3">
-                        <span className="forgot-password text-right mt-2">
-                        <a href="/forgot">Forgot password?</a>
+                    <div className="d-flex justify-content-start mt-1">
+                        <span className="forgot-password text-right ">
+                        <a className="text-decoration-none forgot-text" href="/forgot">Forgot password?</a>
                         </span>
                         
                     

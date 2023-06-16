@@ -1,0 +1,38 @@
+.movieList{
+    min-height: 60vh;
+}
+
+.btn-info{
+    background: #de2105 !important;
+    color: #e0e5ec !important;
+    border-color: #de2105 !important;
+  }
+
+
+  .btn-info:after {
+    position: absolute !important;
+    content: "" !important;
+    width: 0 !important;
+    height: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+    direction: rtl !important;
+    z-index: -1 !important;
+    background: #e0e5ec !important;
+    transition: all 0.3s ease !important;
+  }
+  .btn-info:hover {
+    background: #ef3105 !important;
+    color: rgb(255, 255, 255) !important;
+    border-color: #ef3105 !important;
+  }
+  .btn-info:hover:after {
+    left: auto !important;
+    right: 0 !important;
+    width: 100% !important;
+  }
+  .btn-info:active {
+    top: 2px !important;
+  }
+
+ 

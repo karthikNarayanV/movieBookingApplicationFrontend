@@ -1,9 +1,48 @@
+.forgot-text {
+  color: #0063e4;
+  font-size: 1.3rem;
+  text-decoration: none;
+  margin-top: 1em;
+  display: inline-block;
+  font-weight: bold;
+  padding: 0.5em;
+  margin-left: -0.5em;
+  position: relative;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+}
+.forgot-text:before, .forgot-text:after {
+  position: absolute;
+  content: '';
+  border-bottom: 3px solid #0063e4;
+  border-radius: 1em;
+  bottom: 0.3em;
+  transition: transform 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.forgot-text:before {
+  width: 1em;
+  transform-origin: left;
+}
+.forgot-text:after {
+  width: 82%;
+  left: 1em;
+  transform: translateX(110%);
+}
+.forgot-text:hover:before {
+  transform: scaleX(0.3);
+}
+.forgot-text:hover:after {
+  transform: translateX(0);
+}
+
+
+
 .Auth-form-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100vw;
-    height: 100vh;
+    width: 98vw;
+    height: 89vh;
+    font-family:'Poppins';
   }
   
   .Auth-form {
@@ -35,5 +74,5 @@
   }
 
   .outer{
-      background-color: aqua;
+      background-color: #f9EAD9;
   }

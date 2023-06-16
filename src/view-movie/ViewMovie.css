@@ -1,0 +1,10 @@
+.outer-view{
+    height: 85vh;
+}
+
+.input-box{
+    background-image:linear-gradient(180deg, white, #f9EAD9);
+    margin:auto;
+    width: 300px;
+    border-radius: 10%;
+}

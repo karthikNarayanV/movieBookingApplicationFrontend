@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import { handleFetchResponse } from '../apiUtils';
 
 
 
@@ -36,16 +37,17 @@ export default function Register(props){
                 method:'POST',
                 body:JSON.stringify(userDetail),
                 headers:{'Content-type':'application/json'},
-            }).then((response)=>{
+            }).then(handleFetchResponse)
+            .then((response)=>{
                 if(response.status===200){
                     response.json().then(json=>{
                         sessionStorage.setItem("token",json.token)
                         const roles=json.roles;
                         enqueueSnackbar("Registered Successfully", {variant: 'success' });
                         if(roles.includes('ROLE_ADMIN'))
-                            navigate('/admin-home')
+                            navigate('/admin-main/admin-home')
                         else
-                        navigate('/user-home')
+                        navigate('/user-main/user-home')
                     })
                 }
                 else if(response.status===400){
@@ -55,7 +57,11 @@ export default function Register(props){
                 }
                 
             },(error)=>{
-                enqueueSnackbar(error, {variant: 'error' });
+                if(error.message==='Unauthorized'){
+                    enqueueSnackbar("Session expired", {variant: 'error' });
+                    navigate('/')
+                } 
+                else enqueueSnackbar(error, {variant: 'error' });
             })
     
         }
@@ -96,12 +102,14 @@ export default function Register(props){
         <div className="outer-register">
             <div>
             
-                <AppBar position="static">
+                <AppBar sx={{
+                boxShadow: 0
+            }} color="transparent" position="static">
                     <Toolbar className="d-flex justify-content-end">
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         Movie Booking Application
                     </Typography>
-                        <Button onClick={handleLogin} color="inherit">Login</Button>
+                        <Button onClick={handleLogin} data-testid="login-btn-comp" color="inherit">Login</Button>
                     </Toolbar>
                 </AppBar>
                 
@@ -112,7 +120,7 @@ export default function Register(props){
                 <div className="Auth-form-content">
                     <h3 className="Auth-form-title">Sign Up</h3>
                     <div className="row">
-                        <div class="col-sm-5 offset-sm-2 col-md-6 offset-md-0">
+                        <div className="col-sm-5 offset-sm-2 col-md-6 offset-md-0">
                             <div className="form-group mt-3">
                                 <TextField  data-testid="fname-comp"
                                     type="text"
@@ -121,6 +129,7 @@ export default function Register(props){
                                     className="form-control mt-1"
                                     placeholder="Enter First Name"
                                     onChange={handleChange}
+                                    autoComplete="off"
                                     value={userDetail.firstName}
                                     required label="First Name" variant="outlined" />
                             </div>
@@ -133,6 +142,7 @@ export default function Register(props){
                                 placeholder="Enter Last Name"
                                 onChange={handleChange}
                                 value={userDetail.lastName}
+                                autoComplete="off"
                                 required label="Last Name" variant="outlined" />
                             </div>
                             <div className="form-group mt-3">
@@ -144,11 +154,13 @@ export default function Register(props){
                                 placeholder="Enter email"
                                 onChange={handleChange}
                                 value={userDetail.email}
+                                autoComplete="off"
+                                data-testid="email"
                                 required label="Email" variant="outlined" />
                             
                             </div>
                         </div>
-                        <div class="col-sm-5 offset-sm-2 col-md-6 offset-md-0">
+                        <div className="col-sm-5 offset-sm-2 col-md-6 offset-md-0">
                             <div className="form-group mt-3">
                             <TextField   type="password"
                                 name="password"
@@ -163,8 +175,9 @@ export default function Register(props){
                             <TextField  type="password"
                                 name="cpassword"
                                 className="form-control mt-1"
-                                placeholder="Enter password"
+                                placeholder="Enter Confirm password"
                                 onChange={handleConfirmation}
+                                disabled={userDetail.password === "" ? true : false}
                                 required label="Confirm Password" variant="outlined" />
                             
                             <span style={{ color: "red" }}>{errMsg}</span>
@@ -177,6 +190,7 @@ export default function Register(props){
                                 className="form-control mt-1"
                                 placeholder="Enter Contact Number"
                                 onChange={handleChange}
+                                autoComplete="off"
                                 value={userDetail.contactNumber}
                                 required label="Contact Number" variant="outlined" />
                             
